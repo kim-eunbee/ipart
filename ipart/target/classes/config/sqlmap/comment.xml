@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ipart.repository.mapper.CommentMapper">
+
+	
+	
+
+	<!--  게시판 댓글 쓰기  -->	
+	<insert id="insertComment" parameterType="Comment" >
+		insert into ip_comment(board_no, writer, content)
+		values(#{boardNo}, #{writer}, #{content})
+	</insert>
+
+	<!--  게시판 댓글 수정  -->
+	<update id="updateComment" parameterType="Comment">
+		update ip_comment
+		set content=#{content}
+		where no=#{no}
+	</update>
+	
+	<!--  게시판 댓글 삭제  -->
+	<delete id="deleteComment" parameterType="int">
+		delete from ip_comment
+		where no=#{no}
+	</delete>
+	
+</mapper>	

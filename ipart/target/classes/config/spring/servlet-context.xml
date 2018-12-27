@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xmlns:aop="http://www.springframework.org/schema/aop" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc 
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop.xsd">
+                           
+       <context:component-scan base-package="kr.co.ipart" />
+       
+       <!-- aop 관련 태그 추가 : @Aspect, @PointCut, @Before, ... 등을 해석해주는게 autoproxy -->
+	   <aop:aspectj-autoproxy proxy-target-class="true" />
+	   
+      <mvc:annotation-driven>
+       		<mvc:message-converters>
+       			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	       			<property name="supportedMediaTypes">
+	       				<list>
+	       					<value>text/plain; charset=UTF-8</value>
+	       					<value>text/html; charset=UTF-8</value>
+	       				</list>
+	       			</property>
+       			</bean>
+       		</mvc:message-converters>
+       </mvc:annotation-driven>
+
+       <!-- 얘는 아이디가 고정되어있다. -->
+          <!-- file Upload -->
+	    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	    	<property name="defaultEncoding" value="UTF-8" />
+	        <!-- max upload size in bytes -->
+	        <property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
+	        
+	    </bean>
+       <!--
+       		Web 자원 중 스프링을 거치지 않아도 되는 것들 : Image, CSS, Javascript
+       		얘네들은 보안에 필요없이 바로 페이지를 반환.
+        -->
+        <mvc:resources location="/resources/**" mapping="/resources/**"></mvc:resources>
+        
+       <mvc:default-servlet-handler/>
+       <mvc:view-resolvers>
+       		<mvc:jsp prefix="/WEB-INF/jsp/" suffix=".jsp" />
+       </mvc:view-resolvers>
+</beans>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ipart.repository.mapper.BoardMapper">
+
+	<resultMap id="boardMap" type="Board">
+		<result column="no" property="no" />
+		<result column="reg_date" property="regDate" />
+		<collection property="commentList" column="no" select="selectCommentByNo"/>
+	</resultMap>
+	<resultMap id="commentMap" type="Comment">
+		<result column="reg_date" property="regDate" />
+		<result column="board_no" property="boardNo" />
+	</resultMap>
+	<resultMap id="fileMap" type="File">
+		<result column="board_no" property="boardNo" />
+		<result column="file_path" property="filePath" />
+		<result column="file_sysname" property="fileSysname" />
+		<result column="file_oriname" property="fileOriname" />
+	</resultMap>
+	<resultMap id="recomMap" type="Recom">
+		<result column="board_no" property="boardNo" />
+		<result column="recom_user" property="recomUser" />
+	</resultMap>
+	
+	<select id="selectCommentByNo" parameterType="int"  resultMap="commentMap">
+		select * 
+		from ip_comment 
+		where board_no = #{no}
+		order by desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 게시판 글 목록 (페이징 포함) -->
+	<select id="selectBoard" parameterType="Board" resultMap="boardMap">
+		select *
+		from(select *
+		from ip_board 
+		where category = #{category}
+		order by desc)
+		LIMIT #{startpage}, #{endpage}
+	</select>
+	
+	
+	
+	
+	<!-- 게시판 글 목록(작성자) -->
+	<select id="searchByWriter" parameterType="Board" resultMap="boardMap">
+		select *
+		from ip_board
+		where writer like CONCAT('%',#{searchWord},'%')
+		order by desc
+	</select>
+	
+	<!-- 게시판 글 목록(제목) -->
+	<select id="searchByTitle" parameterType="Board" resultMap="boardMap">
+		select *
+		from ip_board
+		where writer like CONCAT('%',#{searchWord},'%')
+		order by desc
+	</select>
+	
+	<!-- 게시판 글 목록(내용) -->
+	<select id="searchByContnet" parameterType="Board" resultMap="boardMap">
+		select *
+		from ip_board
+		where writer like CONCAT('%',#{searchWord},'%')
+		order by desc
+	</select>
+	
+	<!-- 게시판 글 목록(통합) -->
+	<select id="searchByUni" parameterType="Board" resultMap="boardMap">
+		select *
+		from ip_board
+		where title like CONCAT('%',#{searchWord},'%') 
+		or  writer like CONCAT('%',#{searchWord},'%') 
+		or content like CONCAT('%',#{searchWord},'%') 
+		order by desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 게시판 글 상세 조회 -->
+	<select id="selectBoardDetail" parameterType="int" resultMap="boardMap">
+		select *
+		from ip_board
+		where no = #{no}
+	</select>
+	
+	
+	<!-- 조회수 올리기 -->
+	<update id="countView" parameterType="Recom">
+		update ip_board
+		set view = #{view+1}
+		where no = #{no}
+	</update>	
+	
+	
+	<!-- 추천하기  -->
+	
+	
+
+	
+	<!--  게시판 글 작성  -->
+	<insert id="insertBoard" parameterType="Board" >
+		<!-- <selectKey keyProperty="no" order="BEFORE">
+			select max(no)+1 from ipart_board
+		</selectKey> -->
+		insert into ip_board( title, writer, content, category) 
+		values( #{title}, #{writer}, #{content}, #{category})
+	</insert>
+	
+	<!-- 게시판 글 수정  -->
+	<update id="updateBoard" parameterType="Board">
+		update ip_board
+		set title=#{title},
+		content=#{content}
+		where no=#{no}
+	</update>
+	
+	<!-- 게시판 글 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+		delete from ip_board
+		where no = #{no}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
